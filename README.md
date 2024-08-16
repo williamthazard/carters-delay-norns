@@ -15,11 +15,11 @@ A few months ago, a friend asked me whether it would be possible to make somethi
 
 ### Documentation
 
-e1: input passthrough level
-k1: input passthrough on/off
-e2: delay input level 
-k2: delay input on/off
-e3: control input passthrough level and delay input level simultaneously
+e1: input passthrough level <br>
+k1: input passthrough on/off <br>
+e2: delay input level <br>
+k2: delay input on/off <br>
+e3: control input passthrough level and delay input level simultaneously <br>
 k3: delay output on/off
 
 all of these controls are also available in params for mini mapping
