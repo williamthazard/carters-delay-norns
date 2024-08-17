@@ -158,5 +158,4 @@ end
 
 function cleanup ()
   params:set('monitor_level', pre_init_monitor_level) -- restore 'monitor' level
-  poll.clear_all()
 end
