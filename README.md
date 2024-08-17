@@ -22,4 +22,4 @@ k2: delay input on/off <br>
 e3: control input passthrough level and delay input level simultaneously <br>
 k3: delay output on/off
 
-all of these controls are also available in params for mini mapping
+all of these controls are also available in params for midi mapping
