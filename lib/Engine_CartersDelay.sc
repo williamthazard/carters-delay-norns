@@ -40,7 +40,7 @@ Engine_CartersDelay : CroneEngine {
 		}).add;
 		// downmixing feedbacking saturating filtering patchcord
 		SynthDef(\fbPatchMix, { 
-			arg in=0, out=0, amp=0, balance=0, hpFreq=20;
+			arg in=0, out=0, amp=0, balance=0, hpFreq=12;
 			var input = InFeedback.ar(in, 2);
 			var output = Balance.ar(input[0], input[1], balance);
 			output = HPF.ar(output, hpFreq);
