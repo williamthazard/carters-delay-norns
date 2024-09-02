@@ -118,6 +118,18 @@ function add_parameters()
   end
   )
   params:set("delay_input",0.5)
+
+  params:add_control("pre_level","preserve level",controlspec.AMP)
+  params:set_action("pre_level",function(value)
+      osc.send({"localhost",57120},"/receiver",{4,value})
+  end
+  )
+  params:add_control("fb_level","feedback level",controlspec.AMP)
+  params:set_action("fb_level",function(value)
+      osc.send({"localhost",57120},"/receiver",{5,value})
+  end
+  )
+
   params:bang()
 end
 
