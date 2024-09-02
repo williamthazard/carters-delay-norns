@@ -102,7 +102,7 @@ Engine_CartersDelay : CroneEngine {
 		a = Synth(\mic, [\in, 0, \out, micBus, \amp, 0.5], micGrp);
 		h = Synth(\ptr, [\buf, b, \out, ptrBus], ptrGrp);
 		i = Synth(\rec, [\ptrIn, ptrBus, \micIn, micBus, \buf, b], recGrp);
-		fb = Synth(\fbPatchMix, [\in, 0, \out, micBus], recGrp, addAction:\addToHead);
+		fb = Synth(\fbPatchMix, [\in, 0, \out, micBus], micGrp, addAction:\addToHead);
 		panLFOs = Array.fill(16, {0});
 		cutoffLFOs = Array.fill(16, {0});
 		resonanceLFOs = Array.fill(16, {0});
