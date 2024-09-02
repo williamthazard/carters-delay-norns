@@ -45,7 +45,7 @@ Engine_CartersDelay : CroneEngine {
 				noiseLevel=0.0, sineLevel=0, sineHz=55;
 			var input = InFeedback.ar(in, 2);
 			var output;
-			output = Balance.ar(input[0], input[1], balance);
+			output = Balance2.ar(input[0], input[1], balance);
 			output = output + (PinkNoise.ar * noiseLevel);
 			output = output + (SinOsc.ar(sineHz) * sineLevel);
 			output = HPF.ar(output, hpFreq);
