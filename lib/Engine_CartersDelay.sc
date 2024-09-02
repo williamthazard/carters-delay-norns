@@ -40,12 +40,17 @@ Engine_CartersDelay : CroneEngine {
 		}).add;
 		// downmixing feedbacking saturating filtering patchcord
 		SynthDef(\fbPatchMix, { 
-			arg in=0, out=0, amp=0, balance=0, hpFreq=12;
+			arg in=0, out=0, amp=0, balance=0, hpFreq=12, 
+			// eh, why not
+				noiseLevel=0.0, sineLevel=0, sineHz=55;
 			var input = InFeedback.ar(in, 2);
-			var output = Balance.ar(input[0], input[1], balance);
+			var output;
+			output = Balance.ar(input[0], input[1], balance);
+			output = output + (PinkNoise.ar * noiseLevel);
+			output = output + (SinOsc.ar(sineHz) * sineLevel);
 			output = HPF.ar(output, hpFreq);
 			output = output.softclip;
-			Out.ar(out, output);
+			Out.ar(out, output * amp);
 		}).add;
 		SynthDef(\gran, {
 			arg amp = 0.5, buf = 0, out = 0,
@@ -192,6 +197,36 @@ Engine_CartersDelay : CroneEngine {
 					// set feedback level
 					{
 						fb.set(\amp, msg[2]);
+					}
+				);
+				if (msg[1] == 6,
+					// set feedback balance
+					{
+						fb.set(\balance, msg[2]);
+					}
+				);
+				if (msg[1] == 7,
+					// set feedback highpass frequency
+					{
+						fb.set(\hpFreq, msg[2]);
+					}
+				);
+				if (msg[1] == 8,
+					// set feedback noise level
+					{
+						fb.set(\noiseLevel, msg[2]);
+					}
+				);
+				if (msg[1] == 9,
+					// set feedback sine level
+					{
+						fb.set(\sineLevel, msg[2]);
+					}
+				);
+				if (msg[1] == 10,
+					// set feedback sine frequency
+					{
+						fb.set(\sineHz, msg[2]);
 					}
 				);
 			}, "/receiver");
