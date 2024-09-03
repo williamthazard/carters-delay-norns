@@ -5,6 +5,8 @@ Engine_CartersDelay : CroneEngine {
 	var oscs, kernel, b, timer, micBus, ptrBus, panBus, cutBus, resBus,
 	micGrp, ptrGrp, recGrp, granGrp, panLFOs, cutoffLFOs, resonanceLFOs,
 	rates, durs, delays, a, g, h, i;
+	var fb;
+
 	*new { arg context, doneCallback;
 		^super.new(context, doneCallback);
 	}
@@ -29,11 +31,26 @@ Engine_CartersDelay : CroneEngine {
 			Out.ar(out, sig);
 		}).add;
 		SynthDef(\rec, {
-			arg ptrIn = 0, micIn = 0, buf = 0;
+			arg ptrIn = 0, micIn = 0, buf = 0, preLevel = 0;
 			var ptr, sig;
 			ptr = In.ar(ptrIn, 1);
 			sig = In.ar(micIn, 1);
+			sig = sig + (BufRd.ar(1, buf, ptr) * preLevel);
 			BufWr.ar(sig, buf, ptr);
+		}).add;
+		// downmixing feedbacking saturating filtering patchcord
+		SynthDef(\fbPatchMix, { 
+			arg in=0, out=0, amp=0, balance=0, hpFreq=12, 
+			// eh, why not
+				noiseLevel=0.0, sineLevel=0, sineHz=55;
+			var input = InFeedback.ar(in, 2);
+			var output;
+			output = Balance2.ar(input[0], input[1], balance);
+			output = output + (PinkNoise.ar * noiseLevel);
+			output = output + (SinOsc.ar(sineHz) * sineLevel);
+			output = HPF.ar(output, hpFreq);
+			output = output.softclip;
+			Out.ar(out, output * amp);
 		}).add;
 		SynthDef(\gran, {
 			arg amp = 0.5, buf = 0, out = 0,
@@ -85,6 +102,7 @@ Engine_CartersDelay : CroneEngine {
 		a = Synth(\mic, [\in, 0, \out, micBus, \amp, 0.5], micGrp);
 		h = Synth(\ptr, [\buf, b, \out, ptrBus], ptrGrp);
 		i = Synth(\rec, [\ptrIn, ptrBus, \micIn, micBus, \buf, b], recGrp);
+		fb = Synth(\fbPatchMix, [\in, 0, \out, micBus], micGrp, addAction:\addToHead);
 		panLFOs = Array.fill(16, {0});
 		cutoffLFOs = Array.fill(16, {0});
 		resonanceLFOs = Array.fill(16, {0});
@@ -167,6 +185,48 @@ Engine_CartersDelay : CroneEngine {
 								)
 							}
 						)
+					}
+				);
+				if (msg[1] == 4,
+					// set preserve level
+					{
+						i.set(\preLevel, msg[2]);
+					}
+				);
+				if (msg[1] == 5,
+					// set feedback level
+					{
+						fb.set(\amp, msg[2]);
+					}
+				);
+				if (msg[1] == 6,
+					// set feedback balance
+					{
+						fb.set(\balance, msg[2]);
+					}
+				);
+				if (msg[1] == 7,
+					// set feedback highpass frequency
+					{
+						fb.set(\hpFreq, msg[2]);
+					}
+				);
+				if (msg[1] == 8,
+					// set feedback noise level
+					{
+						fb.set(\noiseLevel, msg[2]);
+					}
+				);
+				if (msg[1] == 9,
+					// set feedback sine level
+					{
+						fb.set(\sineLevel, msg[2]);
+					}
+				);
+				if (msg[1] == 10,
+					// set feedback sine frequency
+					{
+						fb.set(\sineHz, msg[2]);
 					}
 				);
 			}, "/receiver");

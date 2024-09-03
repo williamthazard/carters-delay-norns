@@ -4,6 +4,8 @@
 --
 -- 
 
+musicutil = require 'musicutil'
+
 engine.name='CartersDelay'
 ------------------------------
 -- init
@@ -118,6 +120,44 @@ function add_parameters()
   end
   )
   params:set("delay_input",0.5)
+
+  params:add_control("pre_level","preserve level",controlspec.AMP)
+  params:set_action("pre_level",function(value)
+      osc.send({"localhost",57120},"/receiver",{4,value})
+  end
+  )
+  params:add_control("fb_level","feedback level",controlspec.AMP)
+  params:set_action("fb_level",function(value)
+      osc.send({"localhost",57120},"/receiver",{5,value})
+  end
+  )
+  params:add_control("fb_balance", "feedback balance", controlspec.new(-1,1,'lin',0,0,''))
+  params:set_action("fb_balance",function(value)
+      osc.send({"localhost",57120},"/receiver",{6,value})
+  end
+  )
+  params:add_control("fb_hp", "feedback highpass hz", controlspec.new(0, 220,'lin',0,0,''))
+  params:set_action("fb_hp",function(value)
+      osc.send({"localhost",57120},"/receiver",{7,value})
+  end
+)
+  params:add_control("fb_noise_level", "feedback noise level", controlspec.AMP)
+  params:set_action("fb_noise_level",function(value)
+      osc.send({"localhost",57120},"/receiver",{8,value})
+  end
+  )
+  params:add_control("fb_sine_level", "feedback sine level", controlspec.AMP)
+  params:set_action("fb_sine_level",function(value)
+      osc.send({"localhost",57120},"/receiver",{9,value})
+  end
+  )
+  params:add_control("fb_sine_midi", "feedback sine note", controlspec.new(0, 90, 'lin', 0, 30, ''))
+  params:set_action("fb_sine_midi",function(value)
+      local hz = musicutil.note_num_to_freq(value)
+      osc.send({"localhost",57120},"/receiver",{10,hz})
+  end
+  )
+
   params:bang()
 end
 
