@@ -1,4 +1,5 @@
-//verison 0.0.1
+//verison 0.0.2
+//thanks @graymazes
 
 // Inherit from CroneEngine
 Engine_CartersDelay : CroneEngine {
