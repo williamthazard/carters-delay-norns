@@ -1,5 +1,5 @@
 ---Carter's Delay
--- version 0.0.2 @williamhazard
+-- version 0.1.0 @williamhazard
 -- and @graymazes
 -- with thanks to @jaseknighter
 --
