@@ -1,5 +1,5 @@
 ---Carter's Delay
--- version 0.1.0 @williamhazard
+-- version 0.1.1 @williamhazard
 -- and @graymazes
 -- with thanks to @jaseknighter
 --
@@ -107,7 +107,7 @@ function add_parameters()
       end
   end
   )
-  params:add_group("levels",2)
+  params:add_group("delay levels",3)
   params:add_control("input_passthrough","input passthru level",controlspec.DB)
   params:set_action("input_passthrough",function(value)
       params:set('monitor_level',value)
@@ -127,6 +127,7 @@ function add_parameters()
       osc.send({"localhost",57120},"/receiver",{4,value})
   end
   )
+  params:add_group("feedback",6)
   params:add_control("fb_level","feedback level",controlspec.AMP)
   params:set_action("fb_level",function(value)
       osc.send({"localhost",57120},"/receiver",{5,value})
